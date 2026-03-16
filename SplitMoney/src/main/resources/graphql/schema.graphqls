@@ -1,0 +1,54 @@
+type User{
+    id: ID!
+    name: String!
+    email: String!
+    createdAt: String!
+    updatedAt: String!
+}
+type Group{
+    id: ID!
+    name: String!
+    memberIds:[ID!]!
+    members: [User!]!
+    expenses: [Expense!]!
+    createdBy: User!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Expense{
+    id: ID!
+    description: String!
+    amount: Float!
+    payer:User!
+    group:Group!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Query{
+    hello: String
+    users: [User!]!
+    user(id: ID!):User
+    groups:[Group!]!
+    group(id: ID!):Group
+    expenses(groupId: ID!): [Expense!]!
+}
+
+type Mutation{
+    createGroup(input: CreateGroupInput!): Group!
+    createExpense(input: CreateExpenseInput!): Expense!
+}
+
+input CreateGroupInput {
+    name: String!
+    membersId:[ID!]!
+    createdBy: ID!
+}
+
+input CreateExpenseInput{
+    description:String!
+    amount: Float!
+    payerId: ID!
+    groupId: ID!
+}

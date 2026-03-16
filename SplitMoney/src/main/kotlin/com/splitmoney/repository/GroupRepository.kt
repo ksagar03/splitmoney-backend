@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface GroupRepository : JpaRepository<GroupEntity, Long> {
+interface GroupRepository : JpaRepository<GroupEntity, UUID> {
     @Query("SELECT g FROM GroupEntity g WHERE:userId MEMBER of g.memberIds")
     fun findByGroupIdIn(@Param("userId") userid: UUID): List<GroupEntity>
 }
