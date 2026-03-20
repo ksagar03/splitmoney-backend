@@ -17,10 +17,14 @@ import kotlin.collections.mutableListOf
 
 @Entity
 @Table(name = "groups")
-class GroupEntity : BaseEntity {
+class GroupEntity(
 
     @Column(name = "name", nullable = false)
-    var name: String = ""
+    var name: String,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", nullable = false)
+    var createdBy: UserEntity,
 
     @ElementCollection
     @CollectionTable(
@@ -28,17 +32,9 @@ class GroupEntity : BaseEntity {
         joinColumns = [JoinColumn(name = "group_id")]
     )
     @Column(name = "user_id")
-    var memberIds: MutableSet<UUID> = mutableSetOf()
+    var memberIds: MutableSet<UUID> = mutableSetOf(),
 
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL], orphanRemoval = true)
     var expenses: MutableList<ExpenseEntity> = mutableListOf()
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    var createdBy: UserEntity? = null
-    
-    constructor()  {
-        this.name = name
-        this.createdBy = createdBy
-    }
-}
+) : BaseEntity()
