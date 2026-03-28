@@ -10,10 +10,10 @@ import jakarta.persistence.Table
 @Table(name = "users")
 class UserEntity(
     @Column(name = "name", nullable = false)
-    var name: String,
+    var name: String = "",
 
     @Column(name = "email", nullable = false, unique = true)
-    var email: String
+    var email: String = ""
 ): BaseEntity(){
      constructor() : this("", "")
 }

@@ -37,4 +37,6 @@ class GroupEntity(
     @OneToMany(mappedBy = "group", cascade = [CascadeType.ALL], orphanRemoval = true)
     var expenses: MutableList<ExpenseEntity> = mutableListOf()
 
-) : BaseEntity()
+) : BaseEntity(){
+    constructor() : this("", UserEntity(), mutableSetOf(), mutableListOf())
+}

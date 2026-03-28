@@ -7,6 +7,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 @Entity
 @Table(name="expenses")
@@ -16,7 +17,7 @@ open class ExpenseEntity(
     var description: String,
 
     @Column(name = "amount", nullable = false, precision = 19, scale = 2)
-    var amount: java.math.BigDecimal,
+    var amount: BigDecimal,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payer_id", nullable = false)
@@ -27,6 +28,6 @@ open class ExpenseEntity(
 
     ): BaseEntity(){
 
-    protected constructor() : this("", java.math.BigDecimal.ZERO, UserEntity(), GroupEntity())
+    protected constructor() : this("", BigDecimal.ZERO, UserEntity(), GroupEntity("", UserEntity()))
 
 }
