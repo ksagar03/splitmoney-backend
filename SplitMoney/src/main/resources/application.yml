@@ -18,4 +18,8 @@ spring:
       enabled: true
     schema:
       locations: classpath:graphql
+  app:
+    jwt:
+      secret:""
+      expiration:0
 

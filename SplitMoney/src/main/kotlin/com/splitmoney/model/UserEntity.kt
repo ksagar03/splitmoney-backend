@@ -13,7 +13,16 @@ class UserEntity(
     var name: String = "",
 
     @Column(name = "email", nullable = false, unique = true)
-    var email: String = ""
+    var email: String = "",
+
+    @Column(name ="password", nullable = false)
+    var password: String?,
+
+    @Column(name = "provider")
+    var provider: String = "email",
+
+    @Column(name = "provider_Id")
+    var providerId: String? = null
 ): BaseEntity(){
-     constructor() : this("", "")
+     constructor() : this("", "", "","","")
 }
