@@ -28,3 +28,5 @@ data class Settlement(
     val to: UserEntity,
     val amount: Double
 )
+
+data class AuthPayload(val token: String, val user: UserEntity)

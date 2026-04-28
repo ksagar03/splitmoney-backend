@@ -34,8 +34,14 @@ type Query{
     group(id: ID!):Group
     expenses(groupId: ID!): [Expense!]!
 }
+type AuthPayload{
+    Token: String!
+    user: User!
+}
 
 type Mutation{
+    login(email: String!, password: String!): AuthPayload!
+    register(name: String!, email: String!, password: String!):AuthPayload!
     createGroup(input: CreateGroupInput!): Group!
     createExpense(input: CreateExpenseInput!): Expense!
 }
