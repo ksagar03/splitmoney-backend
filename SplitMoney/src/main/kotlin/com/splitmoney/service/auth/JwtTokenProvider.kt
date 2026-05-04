@@ -1,15 +1,18 @@
 package com.splitmoney.service.auth
 
 import io.jsonwebtoken.Jwts
-import org.hibernate.validator.internal.util.logging.LoggerFactory
+import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
-import java.security.Key
+import org.springframework.stereotype.Component
 import java.util.Date
+import javax.crypto.SecretKey
 
+@Component
 class JwtTokenProvider(
-    @Value("\${app.jwt.secret}") private val secret: Key,
+    @Value("\${app.jwt.secret}") private val secret: String,
     @Value("\${app.jwt.expiration}") private val expiration: Long
 ) {
+    private val secretKey: SecretKey by lazy { Keys.hmacShaKeyFor(secret.toByteArray()) }
     fun generateToken(userId: String, email: String): String{
         val now = Date()
         val expirationDate = Date(now.time + expiration)
@@ -18,22 +21,23 @@ class JwtTokenProvider(
             .claim("email", email)
             .setIssuedAt(now)
             .setExpiration(expirationDate)
+            .signWith(secretKey)
             .compact()
     }
     fun getUserIdFromToken(token: String): String {
         return Jwts.parserBuilder()
-            .setSigningKey(secret)
+            .setSigningKey(secretKey)
             .build()
             .parseClaimsJws(token)
             .body
             .subject
     }
     fun validateToken(token: String): Boolean{
-        try{
+        return try{
             Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token)
-            return true
+             true
         }catch (ex: Exception){
-            return false
+             false
         }
 
     }
