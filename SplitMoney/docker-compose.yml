@@ -1,0 +1,38 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: splitmoney-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: splitmoney
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"          # expose so you can connect from TablePlus / DBeaver
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d splitmoney"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: splitmoney-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/splitmoney   # 'postgres' = service name above
+      DB_USERNAME: admin
+      DB_PASSWORD: password
+      JWT_SECRET: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+      JWT_EXPIRATION: 604800
+    depends_on:
+      postgres:
+        condition: service_healthy   # waits for postgres to be ready before starting app
+
+volumes:
+  postgres_data:
