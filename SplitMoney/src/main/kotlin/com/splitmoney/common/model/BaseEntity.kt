@@ -21,10 +21,16 @@ abstract class  BaseEntity {
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    var createdAt: LocalDateTime? = null
+    var createdAtDate: LocalDateTime? = null
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    var updatedAt: LocalDateTime? = null
+    var updatedAtDate: LocalDateTime? = null
+
+    // GraphQL schema declares createdAt/updatedAt as String! —
+    // Spring GraphQL cannot coerce LocalDateTime to String automatically,
+    // so we expose computed String properties for the resolver to use.
+    val createdAt: String get() = createdAtDate?.toString() ?: ""
+    val updatedAt: String get() = updatedAtDate?.toString() ?: ""
 
 }

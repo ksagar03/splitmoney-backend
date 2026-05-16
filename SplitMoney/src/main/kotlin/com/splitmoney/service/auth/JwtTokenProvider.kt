@@ -32,13 +32,12 @@ class JwtTokenProvider(
             .body
             .subject
     }
-    fun validateToken(token: String): Boolean{
-        return try{
-            Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token)
-             true
-        }catch (ex: Exception){
-             false
+    fun validateToken(token: String): Boolean {
+        return try {
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
+            true
+        } catch (ex: Exception) {
+            false
         }
-
     }
 }
