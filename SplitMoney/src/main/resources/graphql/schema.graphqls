@@ -44,6 +44,8 @@ type Mutation{
     register(name: String!, email: String!, password: String!):AuthPayload!
     createGroup(input: CreateGroupInput!): Group!
     createExpense(input: CreateExpenseInput!): Expense!
+    generateGroupInvite(groupId: ID!): String!
+    joinGroup(token: String!): Group!
 }
 
 input CreateGroupInput {
