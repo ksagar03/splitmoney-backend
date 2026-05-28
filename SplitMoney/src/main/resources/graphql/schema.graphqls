@@ -12,6 +12,7 @@ type Group{
     members: [User!]!
     expenses: [Expense!]!
     createdBy: User!
+    totalExpense: Float!
     createdAt: String!
     updatedAt: String!
 }

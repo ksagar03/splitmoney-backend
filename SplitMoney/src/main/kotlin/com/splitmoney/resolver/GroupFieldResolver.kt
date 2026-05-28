@@ -6,6 +6,7 @@ import com.splitmoney.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
+import java.math.BigDecimal
 
 @Controller
 class GroupFieldResolver(
@@ -14,6 +15,10 @@ class GroupFieldResolver(
     @SchemaMapping(typeName = "Group", field = "members")
     fun members(group: GroupEntity): List<UserEntity> {
         return group.memberIds.mapNotNull { userId -> userRepository.findByIdOrNull(userId) }
+    }
+    @SchemaMapping(typeName = "Group", field = "totalExpense")
+    fun totalExpense(group: GroupEntity): BigDecimal {
+        return group.expenses.sumOf { it.amount }
     }
 
 
