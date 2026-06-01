@@ -4,6 +4,8 @@ import com.splitmoney.model.ExpenseEntity
 import com.splitmoney.model.GroupEntity
 import com.splitmoney.model.data.CreateExpenseInput
 import com.splitmoney.model.data.CreateGroupInput
+import com.splitmoney.model.data.UpdateExpenseInput
+import com.splitmoney.model.data.UpdateGroupInput
 import com.splitmoney.service.ExpenseService
 import com.splitmoney.service.GroupService
 import com.splitmoney.service.GroupInviteService
@@ -41,4 +43,21 @@ class MutationResolver(
 
     private fun currentUserId(): UUID =
         UUID.fromString(SecurityContextHolder.getContext().authentication?.name)
+
+    @MutationMapping
+    fun updateExpense(@Argument id: String, @Argument input: UpdateExpenseInput): ExpenseEntity {
+        return expenseService.updateExpense(UUID.fromString(id), input)
+    }
+    @MutationMapping
+    fun deleteExpense(@Argument id:String): Boolean{
+        return expenseService.deleteExpense(UUID.fromString(id))
+    }
+    @MutationMapping
+    fun updateGroup(@Argument groupId: UUID, @Argument input: UpdateGroupInput): GroupEntity {
+        return groupService.updateGroup(groupId, input)
+    }
+    @MutationMapping
+    fun deleteGroup(@Argument groupId: UUID): Boolean {
+        return groupService.deleteGroup(groupId)
+    }
 }

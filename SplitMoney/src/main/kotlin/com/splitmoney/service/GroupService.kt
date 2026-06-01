@@ -4,6 +4,7 @@ import com.splitmoney.model.GroupEntity
 import com.splitmoney.model.data.Balance
 import com.splitmoney.model.data.CreateGroupInput
 import com.splitmoney.model.data.Settlement
+import com.splitmoney.model.data.UpdateGroupInput
 import com.splitmoney.repository.GroupRepository
 import com.splitmoney.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -94,5 +95,37 @@ class GroupService(
                 settlements = allSettlement.filter { it.from.id == memberId }
                 )
         }
+    }
+    @Transactional
+  fun updateGroup(groupId: UUID, input: UpdateGroupInput): GroupEntity {
+        val group = groupRepository.findById(groupId)
+            .orElseThrow { NoSuchElementException("Group not found with id $groupId") }
+
+        val updatedMemberIds = input.membersIds.toMutableSet()
+        val adminId = group.createdBy.id
+
+        if (!updatedMemberIds.contains(adminId)) {
+            throw IllegalArgumentException("Admin cannot be removed from the group")
+        }
+
+        val members = userRepository.findAllById(updatedMemberIds)
+        if (members.size != updatedMemberIds.size) {
+            throw IllegalArgumentException("One or more members do not match")
+        }
+
+        group.name = input.name
+        group.memberIds.clear()
+        group.memberIds.addAll(updatedMemberIds)
+
+        return groupRepository.save(group)
+    }
+
+    @Transactional
+    fun deleteGroup(groupId: UUID): Boolean{
+        if(!groupRepository.existsById(groupId)){
+            return false
+        }
+        groupRepository.deleteById(groupId)
+        return true
     }
 }

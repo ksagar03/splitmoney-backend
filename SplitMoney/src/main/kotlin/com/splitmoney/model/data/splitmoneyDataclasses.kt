@@ -10,11 +10,22 @@ data class CreateGroupInput(
     val createdBy: UUID
 )
 
+data class UpdateGroupInput(
+    val name: String,
+    val membersIds: List<UUID>,
+    val createdBy: UUID
+)
+
 data class CreateExpenseInput(
     val description: String,
     val amount: Double,
     val payerId: UUID,
     val groupId: UUID
+)
+
+data class UpdateExpenseInput(
+    val description: String,
+    val amount: Double,
 )
 
 data class Balance(
